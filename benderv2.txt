@@ -1,0 +1,73 @@
+import random
+import requests
+
+from discord import Game
+
+from discord.ext.commands import Bot
+
+BOT_PREFIX = ("?", "!")
+TOKEN = "NTIzNTMyMDM4NDIzNDQ1NTE1.Dva-Uw.-gK6nb2FVOslTHFcWNnb9CjQpCw"
+
+client = Bot(command_prefix=BOT_PREFIX)
+
+#Magic eight ball game
+@client.command(name='8ball',
+				description="Answers a Yes/No question about life.",
+				brief="Get answers from the great beyond.",
+				aliases=['eight_ball','eightball','8-ball'],
+				pass_context=True)
+async def eight_ball (context):
+	possible_responses = [
+		'It is certain.',
+		'It is decidedly so.',
+		'Without a doubt.',
+		'Yes - definitely.',
+		'You may rely on it.',
+		'As I see it, yes.',
+		'Most likely.',
+		'Outlook good.',
+		'Yes.',
+		'Signs point to yes.',
+		'Reply hazy, try again.',
+		'Ask again later.',
+		'Better not tell you now.',
+		'Cannot predict now.',
+		'Concentrate and ask again',
+		'Kelly is a scrub lord',
+		'My reply is no',
+		'My sources say no.',
+		'Outlook not so good.',
+		'Very doubtful.',	
+	]
+	await client.say(random.choice(possible_responses) + "," + context.message.author.mention)
+
+#Square Root Tool
+@client.command(name='Sqaure',
+				description="Find the Sqaure Root.",
+				brief="any number you human scumbag.",
+				aliases=['sqaure','root'])
+async def square(number):
+	squared_value=int(number) * int(number)
+	await client.say(str(number) + " squared is " + str(squared_value))
+
+#Set game status
+@client.event
+async def on_ready():
+	await client.change_presence(game=Game(name="Taking over Earth"))
+	print("Logged in as " + client.user.name)
+	
+	
+	
+#bitcoin api call
+@client.command(name= 'Bitcoin',
+				description="Check Current BTC Price",
+				brief="Check current Bitcoin price",
+				aliases=['bitcoin','btc'])
+async def bitcoin():
+    url = 'https://api.coindesk.com/v1/bpi/currentprice/BTC.json'
+    response = requests.get(url)
+    value = response.json()['bpi']['USD']['rate']
+    await client.say("Bitcoin price is: $" + value)
+
+
+client.run(TOKEN)
